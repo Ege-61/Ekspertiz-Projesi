@@ -520,7 +520,7 @@ object DatabaseBaglantı {
     fun getRaporIcinVeri(randevuId: Int): RaporIcinVeriModel? {
         val connection = getConnection() ?: return null
         return try {
-            val sorgu = "{call sp_RaporIcinVeriGetir(?)}"
+            val sorgu = "SELECT * FROM vw_RaporIcinVeriGetir WHERE RandevuID = ?"
             val stmt = connection.prepareCall(sorgu)
             stmt.setInt(1, randevuId)
             val rs = stmt.executeQuery()
@@ -702,6 +702,7 @@ object DatabaseBaglantı {
             liste
         }
     }
+
     fun raporBulPlakaVeyaSase(aramaMetni: String): Int {
         val connection = getConnection() ?: return -1
         return try {

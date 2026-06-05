@@ -52,8 +52,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("net.sourceforge.jtds:jtds:1.3.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
-        // Navigasyon kütüphaneleri (Bu sürümler daha uyumlu)
-        implementation("androidx.navigation:navigation-fragment-ktx:2.8.0")
-        implementation("androidx.navigation:navigation-ui-ktx:2.8.0")
-        // ... diğer dependencies satırların burada kalsın
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.0")
+
 }
