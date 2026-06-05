@@ -1,0 +1,269 @@
+-- ÖNCE BAĞIMLI TABLOLARI SİLİYORUZ (İlişki sırasına göre)
+DROP TABLE IF EXISTS EkspertizRaporlari;
+DROP TABLE IF EXISTS Randevular;
+DROP TABLE IF EXISTS Araclar;
+DROP TABLE IF EXISTS Paketler;
+DROP TABLE IF EXISTS Kullanicilar;
+
+-- 1. KULLANICILAR TABLOSU (Müşteriler)
+CREATE TABLE Kullanicilar (
+    KullaniciID INT IDENTITY(1,1) PRIMARY KEY, -- Otomatik artan ID
+    Ad VARCHAR(50) NOT NULL,
+    Soyad VARCHAR(50) NOT NULL,
+    Telefon VARCHAR(15) NOT NULL CONSTRAINT UQ_Kullanici_Telefon UNIQUE,
+    Eposta VARCHAR(100) NOT NULL CONSTRAINT UQ_Kullanici_Eposta UNIQUE,
+    Sifre VARCHAR(255) NOT NULL,
+    KayitTarihi DATETIME DEFAULT GETDATE()
+);
+
+-- 2. ARAÇLAR TABLOSU
+CREATE TABLE Araclar (
+    AracID INT IDENTITY(1,1) PRIMARY KEY,
+    MusteriID INT NOT NULL,
+    Plaka VARCHAR(15) NOT NULL CONSTRAINT UQ_Arac_Plaka UNIQUE,
+    Marka VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Yil INT NOT NULL CONSTRAINT CHK_Arac_Yil CHECK (Yil >= 1900 AND Yil <= YEAR(GETDATE())),
+    YakitTuru VARCHAR(20) NOT NULL,
+    Kilometre INT NOT NULL CONSTRAINT CHK_Arac_KM CHECK (Kilometre >= 0),
+    
+    CONSTRAINT FK_Araclar_Kullanicilar FOREIGN KEY (MusteriID) 
+        REFERENCES Kullanicilar(KullaniciID) ON DELETE CASCADE
+);
+
+-- 3. PAKETLER TABLOSU
+CREATE TABLE Paketler (
+    PaketID INT IDENTITY(1,1) PRIMARY KEY,
+    PaketAdi VARCHAR(100) NOT NULL CONSTRAINT UQ_Paket_Adi UNIQUE,
+    Aciklama TEXT,
+    Fiyat DECIMAL(10,2) NOT NULL CONSTRAINT CHK_Paket_Fiyat CHECK (Fiyat > 0),
+    Sure INT NOT NULL CONSTRAINT CHK_Paket_Sure CHECK (Sure > 0)
+);
+
+-- 4. RANDEVULAR TABLOSU (Pivot Tablo)
+CREATE TABLE Randevular (
+    RandevuID INT IDENTITY(1,1) PRIMARY KEY,
+    MusteriID INT NOT NULL,
+    AracID INT NOT NULL,
+    PaketID INT NOT NULL,
+    RandevuTarihi DATE NOT NULL,
+    RandevuSaati TIME NOT NULL,
+    Durum VARCHAR(20) DEFAULT 'Beklemede',
+    
+    CONSTRAINT FK_Randevular_Kullanicilar FOREIGN KEY (MusteriID) 
+        REFERENCES Kullanicilar(KullaniciID),
+    CONSTRAINT FK_Randevular_Araclar FOREIGN KEY (AracID) 
+        REFERENCES Araclar(AracID),
+    CONSTRAINT FK_Randevular_Paketler FOREIGN KEY (PaketID) 
+        REFERENCES Paketler(PaketID),
+    CONSTRAINT CHK_Randevu_Durum CHECK (Durum IN ('Beklemede', 'Onaylandi', 'Tamamlandi', 'Iptal'))
+);
+
+-- 5. EKSPERTİZ RAPORLARI TABLOSU (Sonuç Gösterme - Bire-bir İlişki)
+CREATE TABLE EkspertizRaporlari (
+    RaporID INT IDENTITY(1,1) PRIMARY KEY,
+    RandevuID INT NOT NULL CONSTRAINT UQ_Rapor_Randevu UNIQUE, -- Bire-bir ilişki için UNIQUE
+    MotorPerformans INT NOT NULL CONSTRAINT CHK_Rapor_Motor CHECK (MotorPerformans BETWEEN 0 AND 100),
+    KaportaBoyaDurumu TEXT NOT NULL,
+    FrenTesti VARCHAR(50) NOT NULL,
+    AltTakimKontrol VARCHAR(50) NOT NULL,
+    GenelNotlar TEXT,
+    OlusturmaTarihi DATETIME DEFAULT GETDATE(),
+    
+    CONSTRAINT FK_EkspertizRaporlari_Randevular FOREIGN KEY (RandevuID) 
+        REFERENCES Randevular(RandevuID) ON DELETE CASCADE
+);
+
+Tabloların içi 10 örnekli
+
+-- 1. KULLANICILAR (ID yazmıyoruz, otomatik 1..10 olacak)
+INSERT INTO Kullanicilar (Ad, Soyad, Telefon, Eposta, Sifre) VALUES
+('Ahmet', 'Yılmaz', '05321112233', 'ahmet.yilmaz@email.com', 'sifre123'),
+('Mehmet', 'Kaya', '05422223344', 'mehmet.kaya@email.com', 'sifre456'),
+('Ayşe', 'Demir', '05533334455', 'ayse.demir@email.com', 'sifre789'),
+('Mustafa', 'Öztürk', '05054445566', 'mustafa.ozturk@email.com', 'musti12'),
+('Fatma', 'Şahin', '05335556677', 'fatma.sahin@email.com', 'fatma99'),
+('Ali', 'Çelik', '05446667788', 'ali.celik@email.com', 'alipass'),
+('Zeynep', 'Arslan', '05557778899', 'zeynep.arslan@email.com', 'zeyno55'),
+('Murat', 'Yıldız', '05068889900', 'murat.yildiz@email.com', 'muro34'),
+('Elif', 'Aydın', '05359990011', 'elif.aydin@email.com', 'elif2026'),
+('Hüseyin', 'Polat', '05430001122', 'huseyin.polat@email.com', 'huso61');
+
+-- 2. ARAÇLAR (MusteriID'ler otomatik oluşan 1..10 ile eşleşiyor)
+INSERT INTO Araclar (MusteriID, Plaka, Marka, Model, Yil, YakitTuru, Kilometre) VALUES
+(1, '34ABC123', 'Volkswagen', 'Golf', 2018, 'Dizel', 125000),
+(2, '61TS1967', 'Fiat', 'Egea', 2021, 'Benzin/LPG', 45000),
+(3, '06ANK06', 'Renault', 'Clio', 2019, 'Benzin', 85000),
+(4, '35IZM35', 'Toyota', 'Corolla', 2015, 'Hibrit', 160000),
+(5, '41KOU41', 'Hyundai', 'i20', 2020, 'Benzin', 62000),
+(6, '16BUR16', 'Ford', 'Focus', 2017, 'Dizel', 142000),
+(7, '07ANT07', 'Honda', 'Civic', 2022, 'Benzin', 28000),
+(8, '34XYZ99', 'BMW', '320d', 2014, 'Dizel', 210000),
+(9, '54SA554', 'Mercedes', 'C180', 2016, 'Benzin', 115000),
+(10, '26ES226', 'Opel', 'Astra', 2013, 'Dizel', 185000);
+
+-- 3. PAKETLER
+INSERT INTO Paketler (PaketAdi, Aciklama, Fiyat, Sure) VALUES
+('Mini Paket', 'Sadece kaporta ve boya kontrolü.', 1500.00, 30),
+('Standart Paket', 'Kaporta, boya ve motor mekanik alt kontrolü.', 2500.00, 45),
+('Full Paket', 'Kaporta, motor, fren testi ve OBD arıza tespiti.', 3500.00, 60),
+('Premium Paket', 'Full paket içeriğine ek olarak detaylı iç ekspertiz.', 4500.00, 90),
+('Motor-Mekanik Kontrol', 'Sadece motor performansı ve mekanik aksam.', 1800.00, 40),
+('Kaporta-Boya Kontrol', 'Sadece boya değişen ve şase podye kontrolü.', 1200.00, 25),
+('Alt Takım & Süspansiyon', 'Lifte kaldırılarak yürüyen aksam kontrolü.', 1000.00, 20),
+('Fren & Dyno Testi', 'Fren kuvveti ölçümü ve motor güç testi.', 1200.00, 30),
+('OBD Elektronik Arıza', 'Beyin taraması ve hata kodu kontrolü.', 800.00, 15),
+('Vip Ekspertiz', 'A dan Z ye her şey dahil detaylı kontrol.', 6000.00, 120);
+
+-- 4. RANDEVULAR
+INSERT INTO Randevular (MusteriID, AracID, PaketID, RandevuTarihi, RandevuSaati, Durum) VALUES
+(1, 1, 3, '2026-05-10', '09:00:00', 'Tamamlandi'),
+(2, 2, 4, '2026-05-11', '10:30:00', 'Tamamlandi'),
+(3, 3, 2, '2026-05-12', '13:00:00', 'Tamamlandi'),
+(4, 4, 1, '2026-05-13', '14:30:00', 'Tamamlandi'),
+(5, 5, 5, '2026-05-14', '16:00:00', 'Tamamlandi'),
+(6, 6, 6, '2026-05-15', '11:00:00', 'Tamamlandi'),
+(7, 7, 7, '2026-05-18', '09:30:00', 'Onaylandi'),
+(8, 8, 8, '2026-05-18', '14:00:00', 'Beklemede'),
+(9, 9, 9, '2026-05-19', '15:30:00', 'Beklemede'),
+(10, 10, 2, '2026-05-12', '10:00:00', 'Iptal');
+
+-- 5. EKSPERTİZ RAPORLARI (Durumu 'Tamamlandi' olan ilk 6 randevunun ID'si ile eşleşiyor)
+INSERT INTO EkspertizRaporlari (RandevuID, MotorPerformans, KaportaBoyaDurumu, FrenTesti, AltTakimKontrol, GenelNotlar) VALUES
+(1, 85, 'Sağ ön çamurluk boyalı, harici hatasız.', 'Fren performansı %90, iyi durumda.', 'Ön amortisörlerde hafif yağ kaçırma var.', 'Araç genel olarak diri.'),
+(2, 92, 'Değişen ve boya yok, orijinal.', 'Fren performansı %95, kusursuz.', 'Sorunsuz, deformasyon yok.', 'Fabrikadan çıktığı gibi temiz.'),
+(3, 78, 'Tavan hariç temizlik boyası var, sol ön kapı değişen.', 'Ön disklerin değişmesi gerekiyor.', 'Rot kolları gevşek, ayar yapılmalı.', 'Yaşına göre normal.'),
+(4, 88, 'Kaput değişen, şaselerde işlem yok.', 'Frenler orta seviyede, balatalar bitmek üzere.', 'Arka teker bilyalarında ses var.', 'Büyük bir kazası görünmüyor.'),
+(5, 90, 'Hatasız, boyasız.', 'Fren testi başarılı, sapma yok.', 'Alt takım temiz, kaçak yok.', 'Motor kondisyonu çok yüksek.'),
+(6, 82, 'Arka bagaj kapağı lokal boyalı.', 'Fren performansı %85, stabil.', 'Salıncak burçları aşınmış.', 'Yürüyen aksamda ufak masraflar var.');
+
+--İndeks
+
+-- 1. İndeks: Kullanıcı e-posta aramalarını hızlandırmak için
+CREATE INDEX IX_Kullanicilar_Eposta 
+ON Kullanicilar(Eposta);
+GO
+
+-- 2. İndeks: Araç plaka sorgulamalarını hızlandırmak için
+CREATE INDEX IX_Araclar_Plaka 
+ON Araclar(Plaka);
+GO
+
+--View
+
+-- 1. View: Tüm randevu detaylarını tek bir tabloda birleştiren görünüm
+CREATE VIEW VW_RandevuDetaylari AS
+SELECT 
+    r.RandevuID,
+    k.Ad + ' ' + k.Soyad AS MusteriAdSoyad,
+    k.Telefon AS MusteriTelefon,
+    a.Plaka,
+    a.Marka + ' ' + a.Model AS AracBilgisi,
+    p.PaketAdi,
+    p.Fiyat,
+    r.RandevuTarihi,
+    r.RandevuSaati,
+    r.Durum
+FROM Randevular r
+JOIN Kullanicilar k ON r.MusteriID = k.KullaniciID
+JOIN Araclar a ON r.AracID = a.AracID
+JOIN Paketler p ON r.PaketID = p.PaketID;
+GO
+
+-- 2. View: Tamamlanmış ekspertiz raporlarının tüm detaylarını gösteren görünüm
+CREATE VIEW VW_RaporDetaylari AS
+SELECT 
+    er.RaporID,
+    a.Plaka,
+    a.Marka + ' ' + a.Model AS AracBilgisi,
+    p.PaketAdi,
+    er.MotorPerformans,
+    er.KaportaBoyaDurumu,
+    er.FrenTesti,
+    er.AltTakimKontrol,
+    er.GenelNotlar,
+    er.OlusturmaTarihi
+FROM EkspertizRaporlari er
+JOIN Randevular r ON er.RandevuID = r.RandevuID
+JOIN Araclar a ON r.AracID = a.AracID
+JOIN Paketler p ON r.PaketID = p.PaketID;
+GO
+
+--Stored Procedure
+-- 1. SP: Çakışmaları önleyen Güvenli Randevu Oluşturma Prosedürü
+CREATE PROCEDURE SP_RandevuOlustur
+    @MusteriID INT,
+    @AracID INT,
+    @PaketID INT,
+    @RandevuTarihi DATE,
+    @RandevuSaati TIME
+AS
+BEGIN
+    -- Aynı tarih ve saatte aktif bir randevu var mı kontrol et
+    IF EXISTS (SELECT 1 FROM Randevular 
+               WHERE RandevuTarihi = @RandevuTarihi 
+                 AND RandevuSaati = @RandevuSaati 
+                 AND Durum IN ('Beklemede', 'Onaylandi'))
+    BEGIN
+        RAISERROR('Seçilen randevu tarihi ve saati doludur! Lütfen başka bir saat seçin.', 16, 1);
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Randevular (MusteriID, AracID, PaketID, RandevuTarihi, RandevuSaati, Durum)
+        VALUES (@MusteriID, @AracID, @PaketID, @RandevuTarihi, @RandevuSaati, 'Beklemede');
+        
+        PRINT 'Randevu başarıyla oluşturuldu.';
+    END
+END;
+GO
+
+-- 2. SP: Paket fiyatlarına yüzde bazlı dinamik zam yapma prosedürü
+CREATE PROCEDURE SP_PaketFiyatlariniGuncelle
+    @ZamOrani DECIMAL(5,2) -- Örn: 10.00 yazılırsa %10 zam yapar
+AS
+BEGIN
+    UPDATE Paketler
+    SET Fiyat = Fiyat + (Fiyat * (@ZamOrani / 100.00));
+    
+    PRINT 'Tüm paket fiyatları güncellendi.';
+END;
+GO
+
+--Trigger
+-- 1. Trigger: Randevu 'Tamamlandi' olunca otomatik boş rapor satırı oluşturan tetikleyici
+CREATE TRIGGER TRG_RandevuTamamlandiRaporOlustur
+ON Randevular
+AFTER UPDATE
+AS
+BEGIN
+    -- Sadece 'Durum' kolonu güncellendiyse ve yeni durum 'Tamamlandi' ise çalış
+    IF UPDATE(Durum)
+    BEGIN
+        INSERT INTO EkspertizRaporlari (RandevuID, MotorPerformans, KaportaBoyaDurumu, FrenTesti, AltTakimKontrol, GenelNotlar)
+        SELECT 
+            i.RandevuID,
+            0, -- Başlangıç değeri
+            'Kontrol Bekliyor',
+            'Kontrol Bekliyor',
+            'Kontrol Bekliyor',
+            'Randevu tamamlandı, teknik detayların girilmesi bekleniyor.'
+        FROM inserted i
+        JOIN deleted d ON i.RandevuID = d.RandevuID
+        WHERE i.Durum = 'Tamamlandi' AND d.Durum <> 'Tamamlandi';
+    END
+END;
+GO
+
+-- 2. Trigger: Geçmiş tarihe randevu alınmasını engelleyen tetikleyici
+CREATE TRIGGER TRG_GecmisTarihliRandevuEngeli
+ON Randevular
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM inserted WHERE RandevuTarihi < CAST(GETDATE() AS DATE))
+    BEGIN
+        RAISERROR('Geçmiş bir tarihe veya saate randevu oluşturulamaz ya da güncellenemez!', 16, 1);
+        ROLLBACK TRANSACTION; -- Yapılan işlemi geri al, veritabanına kaydetme
+    END
+END;
+GO
