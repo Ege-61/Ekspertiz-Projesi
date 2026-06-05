@@ -229,7 +229,7 @@ object DatabaseBaglantı {
 
         return try {
 
-            val query = "SELECT RandevuSaati FROM com.example.otocheck.Models.Randevu WHERE SirketID = ? AND RandevuTarihi = ?"
+            val query = "SELECT RandevuSaati FROM Randevu WHERE SirketID = ? AND RandevuTarihi = ?"
             val stmt = connection.prepareStatement(query)
             stmt.setInt(1, sirketId)
             stmt.setString(2, tarih)
@@ -521,7 +521,7 @@ object DatabaseBaglantı {
         val connection = getConnection() ?: return null
         return try {
             val sorgu = "SELECT * FROM vw_RaporIcinVeriGetir WHERE RandevuID = ?"
-            val stmt = connection.prepareCall(sorgu)
+            val stmt = connection.prepareStatement(sorgu)
             stmt.setInt(1, randevuId)
             val rs = stmt.executeQuery()
 
@@ -702,24 +702,6 @@ object DatabaseBaglantı {
             liste
         }
     }
-
-    fun raporBulPlakaVeyaSase(aramaMetni: String): Int {
-        val connection = getConnection() ?: return -1
-        return try {
-            // girilen metin plaka veya şaseno sütunlarından herhangi biriyle eşleşirse o raporun ID sini getirir
-            val sorgu = "SELECT RaporID FROM Rapor_Ana WHERE Plaka = ? OR SaseNo = ?"
-            val stmt = connection.prepareStatement(sorgu)
-            stmt.setString(1, aramaMetni)
-            stmt.setString(2, aramaMetni)
-
-            val rs = stmt.executeQuery()
-            if (rs.next()) rs.getInt("RaporID") else -1
-
-        } catch (e: Exception) {
-            -1
-        }
-    }
-
     fun plakaVeyaSaseyeGoreRaporlariGetir(aramaMetni: String): List<AracRaporOzetModel> {
         val liste = mutableListOf<AracRaporOzetModel>()
         val connection = getConnection() ?: return liste
