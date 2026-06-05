@@ -1,0 +1,987 @@
+--DATABASE
+
+CREATE DATABASE OtoCheckDB;
+GO
+
+USE OtoCheckDB;
+GO
+
+
+--TABLOLAR
+
+
+CREATE TABLE Sehirler (
+    SehirID INT IDENTITY(1,1) PRIMARY KEY,
+    SehirAdi VARCHAR(50) NOT NULL UNIQUE
+);
+GO
+
+CREATE TABLE Ilceler (
+    IlceID INT IDENTITY(1,1) PRIMARY KEY,
+    SehirID INT NOT NULL FOREIGN KEY REFERENCES Sehirler(SehirID),
+    IlceAdi VARCHAR(50) NOT NULL
+);
+GO
+
+CREATE TABLE Sirket (
+    SirketID INT IDENTITY(1,1) PRIMARY KEY,
+    SirketAdi VARCHAR(100) NOT NULL,
+    Sehir VARCHAR(50) NOT NULL,
+    Ilce VARCHAR(50) NOT NULL,
+    Adres VARCHAR(250), 
+    LogoPath VARCHAR(MAX), 
+    VKN VARCHAR(11) UNIQUE NOT NULL, 
+    TSE_BelgeNo VARCHAR(50) UNIQUE NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL, 
+    Sifre VARCHAR(100) NOT NULL,         
+    Telefon VARCHAR(15) NOT NULL
+);
+GO
+
+CREATE TABLE Musteri (
+    MusteriID INT IDENTITY(1,1) PRIMARY KEY,
+    AdSoyad VARCHAR(100) NOT NULL,
+    Telefon VARCHAR(15) UNIQUE NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Sifre VARCHAR(100) NOT NULL
+);
+GO
+
+CREATE TABLE Paket (
+    PaketID INT IDENTITY(1,1) PRIMARY KEY,
+    SirketID INT NOT NULL FOREIGN KEY REFERENCES Sirket(SirketID), 
+    PaketAdi VARCHAR(50) NOT NULL, 
+    Fiyat DECIMAL(10,2) NOT NULL CHECK (Fiyat >= 0),
+    Icerik_Motor BIT NOT NULL DEFAULT 0,
+    Icerik_Mekanik BIT NOT NULL DEFAULT 0,
+    Icerik_Kaporta BIT NOT NULL DEFAULT 0,
+    Icerik_Airbag BIT NOT NULL DEFAULT 0,
+    Icerik_OBD BIT NOT NULL DEFAULT 0
+);
+GO
+
+CREATE TABLE Araba (
+    ArabaID INT IDENTITY(1,1) PRIMARY KEY,
+    MusteriID INT NOT NULL FOREIGN KEY REFERENCES Musteri(MusteriID),
+    Plaka VARCHAR(15) UNIQUE NOT NULL,
+    Marka VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Yil INT CHECK (Yil >= 1900 AND Yil <= YEAR(GETDATE()) + 1)
+);
+GO
+
+CREATE TABLE Randevu (
+    RandevuID INT IDENTITY(1,1) PRIMARY KEY,
+    MusteriID INT NOT NULL FOREIGN KEY REFERENCES Musteri(MusteriID),
+    SirketID INT NOT NULL FOREIGN KEY REFERENCES Sirket(SirketID), 
+    ArabaID INT NOT NULL FOREIGN KEY REFERENCES Araba(ArabaID),
+    PaketID INT NOT NULL FOREIGN KEY REFERENCES Paket(PaketID),
+    RandevuTarihi DATE NOT NULL,
+    RandevuSaati TIME NOT NULL, 
+    AnlasilanFiyat DECIMAL(10,2) NOT NULL, 
+    Durum VARCHAR(20) DEFAULT 'Bekliyor' CHECK (Durum IN ('Bekliyor', 'Tamamlandı', 'İptal Edildi')),
+    CONSTRAINT UQ_Randevu UNIQUE (SirketID, RandevuTarihi, RandevuSaati)
+);
+GO
+
+CREATE TABLE Rapor_Ana (
+    RaporID INT IDENTITY(1,1) PRIMARY KEY,
+    RandevuID INT UNIQUE NOT NULL FOREIGN KEY REFERENCES Randevu(RandevuID), 
+    Plaka VARCHAR(15) NOT NULL,
+    SaseNo VARCHAR(17) NOT NULL,
+    Kilometre INT NOT NULL CHECK (Kilometre >= 0), 
+    Marka VARCHAR(50),
+    Model VARCHAR(50),
+    Yil INT CHECK (Yil >= 1900 AND Yil <= YEAR(GETDATE()) + 1), 
+    YakitTipi VARCHAR(20) CHECK (YakitTipi IN ('Benzin', 'Dizel', 'LPG', 'Hibrit', 'Elektrik')),
+    VitesTipi VARCHAR(20) CHECK (VitesTipi IN ('Manuel', 'Otomatik', 'Yarı Otomatik')),
+    RaporTarihi DATETIME DEFAULT GETDATE()
+);
+GO
+
+CREATE TABLE Rapor_Airbag (
+    AirbagID INT IDENTITY(1,1) PRIMARY KEY,
+    RaporID INT UNIQUE NOT NULL FOREIGN KEY REFERENCES Rapor_Ana(RaporID),
+    SurucuAirbag VARCHAR(30) CHECK (SurucuAirbag IN ('Orijinal', 'Değişmiş', 'Onarımlı/Kaplama', 'Dirençli', 'Patlak')),
+    YolcuAirbag VARCHAR(30) CHECK (YolcuAirbag IN ('Orijinal', 'Değişmiş', 'Onarımlı/Kaplama', 'Dirençli', 'Patlak')),
+    SurucuDizAirbag VARCHAR(30) CHECK (SurucuDizAirbag IN ('Orijinal', 'Değişmiş', 'Onarımlı/Kaplama', 'Dirençli', 'Patlak', 'Donanımda Yok')),
+    YolcuDizAirbag VARCHAR(30) CHECK (YolcuDizAirbag IN ('Orijinal', 'Değişmiş', 'Onarımlı/Kaplama', 'Dirençli', 'Patlak', 'Donanımda Yok')),
+    SolPerdeAirbag VARCHAR(30) CHECK (SolPerdeAirbag IN ('Orijinal', 'Değişmiş', 'Onarımlı/Kaplama', 'Dirençli', 'Patlak', 'Donanımda Yok')),
+    SagPerdeAirbag VARCHAR(30) CHECK (SagPerdeAirbag IN ('Orijinal', 'Değişmiş', 'Onarımlı/Kaplama', 'Dirençli', 'Patlak', 'Donanımda Yok')),
+    SurucuKoltukAirbag VARCHAR(30) CHECK (SurucuKoltukAirbag IN ('Orijinal', 'Değişmiş', 'Onarımlı/Kaplama', 'Dirençli', 'Patlak', 'Donanımda Yok')),
+    YolcuKoltukAirbag VARCHAR(30) CHECK (YolcuKoltukAirbag IN ('Orijinal', 'Değişmiş', 'Onarımlı/Kaplama', 'Dirençli', 'Patlak', 'Donanımda Yok')),
+    EmniyetKemerleri VARCHAR(30) CHECK (EmniyetKemerleri IN ('Orijinal', 'Değişmiş', 'Onarımlı/Dirençli', 'Patlak')),
+    Aciklama VARCHAR(500)
+);
+GO
+
+CREATE TABLE Rapor_Mekanik (
+    MekanikID INT IDENTITY(1,1) PRIMARY KEY,
+    RaporID INT UNIQUE NOT NULL FOREIGN KEY REFERENCES Rapor_Ana(RaporID),
+    SolAks VARCHAR(20) CHECK (SolAks IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    SagAks VARCHAR(20) CHECK (SagAks IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    DireksiyonKutusu VARCHAR(20) CHECK (DireksiyonKutusu IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    RotBaslari VARCHAR(20) CHECK (RotBaslari IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    OnBalatalar VARCHAR(20) CHECK (OnBalatalar IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    ArkaBalatalar VARCHAR(20) CHECK (ArkaBalatalar IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    OnDiskler VARCHAR(20) CHECK (OnDiskler IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    ArkaDiskler VARCHAR(20) CHECK (ArkaDiskler IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    SolOnSuspansiyon VARCHAR(20) CHECK (SolOnSuspansiyon IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    SagOnSuspansiyon VARCHAR(20) CHECK (SagOnSuspansiyon IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    SolArkaSuspansiyon VARCHAR(20) CHECK (SolArkaSuspansiyon IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    SagArkaSuspansiyon VARCHAR(20) CHECK (SagArkaSuspansiyon IN ('Çok İyi', 'İyi', 'Orta', 'Kötü/Değişmeli')),
+    Aciklama VARCHAR(500) 
+);
+GO
+
+CREATE TABLE Rapor_Motor (
+    MotorID INT IDENTITY(1,1) PRIMARY KEY,
+    RaporID INT UNIQUE NOT NULL FOREIGN KEY REFERENCES Rapor_Ana(RaporID),
+    MotorSesi VARCHAR(20) CHECK (MotorSesi IN ('Normal', 'Sesli/İticili', 'Anormal')),
+    UflemeVeDuman VARCHAR(20) CHECK (UflemeVeDuman IN ('Yok', 'Hafif Üfleme', 'Duman Atıyor')),
+    YagVeSiviSeviyeleri VARCHAR(30) CHECK (YagVeSiviSeviyeleri IN ('Seviyeler Tam', 'Eksik/Değişim Gerekli', 'Özelliğini Yitirmiş')),
+    MotorYagKacaklari VARCHAR(20) CHECK (MotorYagKacaklari IN ('Yok', 'Terleme Var', 'Kaçak Var')),
+    TurboVeYakıtSistemi VARCHAR(30) CHECK (TurboVeYakıtSistemi IN ('Sorunsuz', 'Ses/Terleme Var', 'Sorunlu/Bakım Şart')),
+    SogutmaVeKlima VARCHAR(30) CHECK (SogutmaVeKlima IN ('Sorunsuz', 'Su Kaçağı Var', 'Klima Soğutmuyor')),
+    KayisVeKasnaklar VARCHAR(30) CHECK (KayisVeKasnaklar IN ('İyi Durumda', 'Çatlak/Aşınmış', 'Ses Yapıyor')),
+    SanzimanVeAktarma VARCHAR(30) CHECK (SanzimanVeAktarma IN ('Sorunsuz', 'Vuruntulu/Sarsıntılı', 'Kaçak/Sorun Var')),
+    Aciklama VARCHAR(500)
+);
+GO
+
+CREATE TABLE Rapor_OBD (
+    ObdID INT IDENTITY(1,1) PRIMARY KEY,
+    RaporID INT UNIQUE NOT NULL FOREIGN KEY REFERENCES Rapor_Ana(RaporID),
+    GostergeKilometre INT CHECK (GostergeKilometre >= 0), 
+    BeyinKilometre INT CHECK (BeyinKilometre >= 0), 
+    KmOrijinalligi VARCHAR(30) CHECK (KmOrijinalligi IN ('Orijinal', 'Düşürülmüş/Müdahaleli', 'Tespit Edilemedi')),
+    TramerDurumu VARCHAR(20) CHECK (TramerDurumu IN ('Hasar Kaydı Yok', 'Çarpma/Maddi Hasar', 'Ağır Hasar/Pert')),
+    TramerTutari DECIMAL(10,2) DEFAULT 0, 
+    MotorBeyni_ECU VARCHAR(20) CHECK (MotorBeyni_ECU IN ('Sorunsuz', 'Geçmiş Hata Var', 'Aktif Hata Var')),
+    SanzimanBeyni_TCM VARCHAR(20) CHECK (SanzimanBeyni_TCM IN ('Sorunsuz', 'Geçmiş Hata Var', 'Aktif Hata Var', 'Manuel/Yok')),
+    ABS_ESP_Sistemi VARCHAR(20) CHECK (ABS_ESP_Sistemi IN ('Sorunsuz', 'Geçmiş Hata Var', 'Aktif Hata Var')),
+    Airbag_Sistemi VARCHAR(30) CHECK (Airbag_Sistemi IN ('Sorunsuz', 'Aktif Hata Var', 'Direnç Atılmış/İşlemli')),
+    ElektronikAksamlar VARCHAR(20) CHECK (ElektronikAksamlar IN ('Sorunsuz', 'Kısmi Arızalı', 'Sorunlu')),
+    Aciklama VARCHAR(500) 
+);
+GO
+
+CREATE TABLE Rapor_Kaporta (
+    KaportaID INT IDENTITY(1,1) PRIMARY KEY,
+    RaporID INT UNIQUE NOT NULL FOREIGN KEY REFERENCES Rapor_Ana(RaporID),
+    Tavan VARCHAR(20) CHECK (Tavan IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen', 'Cam')),
+    OnTampon VARCHAR(20) CHECK (OnTampon IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen', 'Plastik')),
+    ArkaTampon VARCHAR(20) CHECK (ArkaTampon IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen', 'Plastik')),
+    Kaput VARCHAR(20) CHECK (Kaput IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    Bagaj VARCHAR(20) CHECK (Bagaj IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SolOnCamurluk VARCHAR(20) CHECK (SolOnCamurluk IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SagOnCamurluk VARCHAR(20) CHECK (SagOnCamurluk IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SolArkaCamurluk VARCHAR(20) CHECK (SolArkaCamurluk IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SagArkaCamurluk VARCHAR(20) CHECK (SagArkaCamurluk IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SolOnKapi VARCHAR(20) CHECK (SolOnKapi IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SagOnKapi VARCHAR(20) CHECK (SagOnKapi IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SolArkaKapi VARCHAR(20) CHECK (SolArkaKapi IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SagArkaKapi VARCHAR(20) CHECK (SagArkaKapi IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SolMarspiyel VARCHAR(20) CHECK (SolMarspiyel IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SagMarspiyel VARCHAR(20) CHECK (SagMarspiyel IN ('Orijinal', 'Boyalı', 'Lokal Boyalı', 'Değişen')),
+    SolOnDirek VARCHAR(20) CHECK (SolOnDirek IN ('Orijinal', 'Boyalı', 'İşlemli')),
+    SagOnDirek VARCHAR(20) CHECK (SagOnDirek IN ('Orijinal', 'Boyalı', 'İşlemli')),
+    SolOrtaDirek VARCHAR(20) CHECK (SolOrtaDirek IN ('Orijinal', 'Boyalı', 'İşlemli')),
+    SagOrtaDirek VARCHAR(20) CHECK (SagOrtaDirek IN ('Orijinal', 'Boyalı', 'İşlemli')),
+    SolArkaDirek VARCHAR(20) CHECK (SolArkaDirek IN ('Orijinal', 'Boyalı', 'İşlemli')),
+    SagArkaDirek VARCHAR(20) CHECK (SagArkaDirek IN ('Orijinal', 'Boyalı', 'İşlemli')),
+    SolOnSase VARCHAR(20) CHECK (SolOnSase IN ('Orijinal', 'İşlemli')),
+    SagOnSase VARCHAR(20) CHECK (SagOnSase IN ('Orijinal', 'İşlemli')),
+    SolArkaSase VARCHAR(20) CHECK (SolArkaSase IN ('Orijinal', 'İşlemli')),
+    SagArkaSase VARCHAR(20) CHECK (SagArkaSase IN ('Orijinal', 'İşlemli')),
+    SolPodye VARCHAR(20) CHECK (SolPodye IN ('Orijinal', 'İşlemli')),
+    SagPodye VARCHAR(20) CHECK (SagPodye IN ('Orijinal', 'İşlemli')),
+    BagajHavuzu VARCHAR(20) CHECK (BagajHavuzu IN ('Orijinal', 'İşlemli')),
+    Aciklama VARCHAR(500)
+);
+GO
+
+
+
+--INDEX LER
+
+
+CREATE INDEX IX_Sirket_Konum ON Sirket(Sehir, Ilce);
+CREATE INDEX IX_Paket_Fiyat ON Paket(Fiyat);
+CREATE INDEX IX_RaporAna_Plaka ON Rapor_Ana(Plaka);
+GO
+
+
+
+--VIEW LAR
+
+
+CREATE VIEW vw_SirketPaketleri AS
+SELECT 
+    PaketID, 
+    SirketID, 
+    PaketAdi, 
+    Fiyat, 
+    Icerik_Motor, 
+    Icerik_Mekanik, 
+    Icerik_Kaporta, 
+    Icerik_Airbag, 
+    Icerik_OBD 
+FROM Paket;
+GO
+
+CREATE VIEW vw_MusteriRandevulari AS
+SELECT 
+    R.RandevuID, 
+    R.MusteriID, 
+    S.SirketID, 
+    S.SirketAdi, 
+    S.Sehir, 
+    S.Ilce, 
+    S.Adres, 
+    P.PaketAdi, 
+    R.RandevuTarihi AS Tarih, 
+    R.RandevuSaati AS Saat, 
+    R.AnlasilanFiyat AS Fiyat, 
+    R.Durum
+FROM Randevu R
+INNER JOIN Sirket S ON R.SirketID = S.SirketID
+INNER JOIN Paket P ON R.PaketID = P.PaketID
+WHERE R.Durum = 'Bekliyor';
+GO
+
+CREATE VIEW vw_SirketRandevulari AS
+SELECT 
+    R.RandevuID, 
+    R.SirketID, 
+    R.RandevuTarihi, 
+    R.RandevuSaati, 
+    P.PaketAdi, 
+    A.Plaka, 
+    A.Marka, 
+    A.Model, 
+    A.Yil, 
+    R.Durum
+FROM Randevu R
+INNER JOIN Araba A ON R.ArabaID = A.ArabaID
+INNER JOIN Paket P ON R.PaketID = P.PaketID
+WHERE R.Durum = 'Bekliyor';
+GO
+
+CREATE VIEW vw_GecmisRaporlar AS
+SELECT 
+    R.RandevuID, 
+    M.MusteriID, 
+    S.SirketAdi, 
+    P.PaketAdi, 
+    FORMAT(R.RandevuTarihi, 'dd.MM.yyyy') AS Tarih, 
+    R.AnlasilanFiyat AS Fiyat, 
+    RA.RaporID, 
+    RA.Plaka, 
+    RA.Marka, 
+    RA.Model
+FROM Randevu R
+INNER JOIN Sirket S ON R.SirketID = S.SirketID
+INNER JOIN Paket P ON R.PaketID = P.PaketID
+INNER JOIN Musteri M ON R.MusteriID = M.MusteriID
+INNER JOIN Rapor_Ana RA ON R.RandevuID = RA.RandevuID
+WHERE R.Durum = 'Tamamlandı';
+GO
+
+CREATE VIEW vw_AraçRaporGecmisi AS
+SELECT 
+    RA.RaporID, 
+    RA.Plaka, 
+    RA.SaseNo, 
+    RA.Marka, 
+    RA.Model, 
+    RA.Kilometre, 
+    FORMAT(RA.RaporTarihi, 'dd.MM.yyyy') AS RaporTarihi, 
+    S.SirketAdi, 
+    P.PaketAdi
+FROM Rapor_Ana RA
+INNER JOIN Randevu R ON RA.RandevuID = R.RandevuID
+INNER JOIN Sirket S ON R.SirketID = S.SirketID
+INNER JOIN Paket P ON R.PaketID = P.PaketID;
+GO
+
+CREATE VIEW vw_RaporTumDetaylar AS
+SELECT 
+    A.RaporID, 
+    A.Plaka, 
+    A.Marka, 
+    A.Model, 
+    A.Kilometre, 
+    A.SaseNo, 
+    FORMAT(A.RaporTarihi, 'dd.MM.yyyy') AS RaporTarihi,
+    K.Tavan, K.OnTampon, K.ArkaTampon, K.Kaput, K.Bagaj, 
+    K.SolOnCamurluk, K.SagOnCamurluk, K.SolArkaCamurluk, K.SagArkaCamurluk, 
+    K.SolOnKapi, K.SagOnKapi, K.SolArkaKapi, K.SagArkaKapi, K.SolMarspiyel, K.SagMarspiyel,
+    K.SolOnDirek, K.SagOnDirek, K.SolOrtaDirek, K.SagOrtaDirek, K.SolArkaDirek, K.SagArkaDirek,
+    K.SolOnSase, K.SagOnSase, K.SolArkaSase, K.SagArkaSase, K.SolPodye, K.SagPodye, K.BagajHavuzu, 
+    K.Aciklama AS KaportaNot,
+    M.MotorSesi, M.UflemeVeDuman, M.YagVeSiviSeviyeleri, M.MotorYagKacaklari, 
+    M.TurboVeYakıtSistemi, M.SogutmaVeKlima, M.KayisVeKasnaklar, M.SanzimanVeAktarma, 
+    M.Aciklama AS MotorNot,
+    ME.SolAks, ME.SagAks, ME.DireksiyonKutusu, ME.RotBaslari, 
+    ME.OnBalatalar, ME.ArkaBalatalar, ME.OnDiskler, ME.ArkaDiskler, 
+    ME.SolOnSuspansiyon, ME.SagOnSuspansiyon, ME.SolArkaSuspansiyon, ME.SagArkaSuspansiyon, 
+    ME.Aciklama AS MekanikNot,
+    O.GostergeKilometre, O.BeyinKilometre, O.KmOrijinalligi, O.TramerDurumu, O.TramerTutari, 
+    O.MotorBeyni_ECU, O.SanzimanBeyni_TCM, O.ABS_ESP_Sistemi, O.Airbag_Sistemi, O.ElektronikAksamlar, 
+    O.Aciklama AS ObdNot,
+    AB.SurucuAirbag, AB.YolcuAirbag, AB.SurucuDizAirbag, AB.YolcuDizAirbag, 
+    AB.SolPerdeAirbag, AB.SagPerdeAirbag, AB.SurucuKoltukAirbag, AB.YolcuKoltukAirbag, 
+    AB.EmniyetKemerleri, 
+    AB.Aciklama AS AirbagNot
+FROM Rapor_Ana A
+LEFT JOIN Rapor_Kaporta K ON A.RaporID = K.RaporID
+LEFT JOIN Rapor_Motor M ON A.RaporID = M.RaporID
+LEFT JOIN Rapor_Mekanik ME ON A.RaporID = ME.RaporID
+LEFT JOIN Rapor_OBD O ON A.RaporID = O.RaporID
+LEFT JOIN Rapor_Airbag AB ON A.RaporID = AB.RaporID;
+GO
+
+CREATE VIEW vw_ProfilBilgileri AS
+SELECT 
+    MusteriID AS KullaniciID, 
+    0 AS IsKurumsal, 
+    AdSoyad AS Isim, 
+    Telefon, 
+    Email 
+FROM Musteri
+UNION ALL
+SELECT 
+    SirketID AS KullaniciID, 
+    1 AS IsKurumsal, 
+    SirketAdi AS Isim, 
+    Telefon, 
+    Email 
+FROM Sirket;
+GO
+
+CREATE VIEW vw_RaporIcinVeriGetir AS
+SELECT 
+    R.RandevuID, 
+    A.Plaka, 
+    A.Marka, 
+    A.Model, 
+    A.Yil, 
+    M.AdSoyad AS MusteriAdi, 
+    P.PaketAdi,
+    P.Icerik_Motor, 
+    P.Icerik_Mekanik, 
+    P.Icerik_Kaporta, 
+    P.Icerik_Airbag, 
+    P.Icerik_OBD
+FROM Randevu R
+INNER JOIN Araba A ON R.ArabaID = A.ArabaID
+INNER JOIN Musteri M ON R.MusteriID = M.MusteriID
+INNER JOIN Paket P ON R.PaketID = P.PaketID;
+GO
+
+
+
+--STORED PROCEDURE LER
+
+
+CREATE PROCEDURE sp_MusteriKayit
+    @AdSoyad VARCHAR(100), 
+    @Telefon VARCHAR(15), 
+    @Email VARCHAR(100), 
+    @Sifre VARCHAR(100)
+AS 
+BEGIN
+    INSERT INTO Musteri (
+        AdSoyad, 
+        Telefon, 
+        Email, 
+        Sifre
+    ) 
+    VALUES (
+        @AdSoyad, 
+        @Telefon, 
+        @Email, 
+        @Sifre
+    );
+END;
+GO
+
+CREATE PROCEDURE sp_SirketKayit
+    @SirketAdi VARCHAR(100), 
+    @Sehir VARCHAR(50), 
+    @Ilce VARCHAR(50), 
+    @Adres VARCHAR(250),
+    @VKN VARCHAR(11), 
+    @TSE_BelgeNo VARCHAR(50), 
+    @Telefon VARCHAR(15), 
+    @Email VARCHAR(100), 
+    @Sifre VARCHAR(100), 
+    @LogoPath VARCHAR(MAX)
+AS 
+BEGIN
+    INSERT INTO Sirket (
+        SirketAdi, 
+        Sehir, 
+        Ilce, 
+        Adres, 
+        VKN, 
+        TSE_BelgeNo, 
+        Telefon, 
+        Email, 
+        Sifre, 
+        LogoPath
+    )
+    VALUES (
+        @SirketAdi, 
+        @Sehir, 
+        @Ilce, 
+        @Adres, 
+        @VKN, 
+        @TSE_BelgeNo, 
+        @Telefon, 
+        @Email, 
+        @Sifre, 
+        @LogoPath
+    );
+END;
+GO
+
+CREATE PROCEDURE sp_PaketEkle
+    @SirketID INT, 
+    @PaketAdi VARCHAR(100), 
+    @Fiyat DECIMAL(18,2), 
+    @Motor BIT, 
+    @Mekanik BIT, 
+    @Kaporta BIT, 
+    @Airbag BIT, 
+    @OBD BIT
+AS 
+BEGIN
+    INSERT INTO Paket (
+        SirketID, 
+        PaketAdi, 
+        Fiyat, 
+        Icerik_Motor, 
+        Icerik_Mekanik, 
+        Icerik_Kaporta, 
+        Icerik_Airbag, 
+        Icerik_OBD
+    )
+    VALUES (
+        @SirketID, 
+        @PaketAdi, 
+        @Fiyat, 
+        @Motor, 
+        @Mekanik, 
+        @Kaporta, 
+        @Airbag, 
+        @OBD
+    );
+END;
+GO
+
+CREATE PROCEDURE sp_PaketGuncelle
+    @PaketID INT, 
+    @PaketAdi VARCHAR(100), 
+    @Fiyat DECIMAL(18,2), 
+    @Motor BIT, 
+    @Mekanik BIT, 
+    @Kaporta BIT, 
+    @Airbag BIT, 
+    @OBD BIT
+AS 
+BEGIN
+    UPDATE Paket 
+    SET 
+        PaketAdi = @PaketAdi, 
+        Fiyat = @Fiyat, 
+        Icerik_Motor = @Motor, 
+        Icerik_Mekanik = @Mekanik, 
+        Icerik_Kaporta = @Kaporta, 
+        Icerik_Airbag = @Airbag, 
+        Icerik_OBD = @OBD
+    WHERE PaketID = @PaketID;
+END;
+GO
+
+CREATE PROCEDURE sp_PaketSil
+    @PaketID INT
+AS 
+BEGIN
+    DELETE FROM Paket WHERE PaketID = @PaketID;
+END;
+GO
+
+CREATE PROCEDURE sp_EkspertizFiltrele
+    @Sehir VARCHAR(50) = NULL, 
+    @Ilce VARCHAR(50) = NULL, 
+    @MaxFiyat DECIMAL(10,2) = NULL,
+    @Icerik_Motor BIT = 0, 
+    @Icerik_Mekanik BIT = 0, 
+    @Icerik_Kaporta BIT = 0, 
+    @Icerik_Airbag BIT = 0, 
+    @Icerik_OBD BIT = 0,
+    @Siralama VARCHAR(20) = 'FiyatArtan'
+AS 
+BEGIN
+    SELECT 
+        S.SirketID, 
+        P.PaketID, 
+        S.SirketAdi, 
+        S.Sehir, 
+        S.Ilce, 
+        S.LogoPath, 
+        P.PaketAdi, 
+        P.Fiyat,
+        P.Icerik_Motor, 
+        P.Icerik_Mekanik, 
+        P.Icerik_Kaporta, 
+        P.Icerik_Airbag, 
+        P.Icerik_OBD
+    FROM Sirket S 
+    INNER JOIN Paket P ON S.SirketID = P.SirketID
+    WHERE 
+        (@Sehir IS NULL OR S.Sehir = @Sehir) AND 
+        (@Ilce IS NULL OR S.Ilce = @Ilce) AND 
+        (@MaxFiyat IS NULL OR P.Fiyat <= @MaxFiyat) AND 
+        (@Icerik_Motor = 0 OR P.Icerik_Motor = 1) AND 
+        (@Icerik_Mekanik = 0 OR P.Icerik_Mekanik = 1) AND 
+        (@Icerik_Kaporta = 0 OR P.Icerik_Kaporta = 1) AND 
+        (@Icerik_Airbag = 0 OR P.Icerik_Airbag = 1) AND 
+        (@Icerik_OBD = 0 OR P.Icerik_OBD = 1)
+    ORDER BY 
+        CASE WHEN @Siralama = 'FiyatArtan' THEN P.Fiyat END ASC, 
+        CASE WHEN @Siralama = 'FiyatAzalan' THEN P.Fiyat END DESC;
+END;
+GO
+
+CREATE PROCEDURE sp_RandevuOlustur
+    @MusteriID INT, 
+    @SirketID INT, 
+    @PaketID INT, 
+    @Tarih DATE, 
+    @Saat TIME, 
+    @Fiyat DECIMAL(10,2), 
+    @Plaka VARCHAR(15), 
+    @Marka VARCHAR(50), 
+    @Model VARCHAR(50), 
+    @Yil INT
+AS 
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        DECLARE @ArabaID INT;
+        
+        SELECT @ArabaID = ArabaID FROM Araba WHERE Plaka = @Plaka;
+        
+        IF @ArabaID IS NULL
+        BEGIN
+            INSERT INTO Araba (MusteriID, Plaka, Marka, Model, Yil) 
+            VALUES (@MusteriID, @Plaka, @Marka, @Model, @Yil);
+            
+            SET @ArabaID = SCOPE_IDENTITY();
+        END
+        
+        INSERT INTO Randevu (
+            MusteriID, SirketID, ArabaID, PaketID, 
+            RandevuTarihi, RandevuSaati, AnlasilanFiyat, Durum
+        )
+        VALUES (
+            @MusteriID, @SirketID, @ArabaID, @PaketID, 
+            @Tarih, @Saat, @Fiyat, 'Bekliyor'
+        );
+        
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+GO
+
+CREATE PROCEDURE sp_RaporAnaKaydet
+    @RandevuID INT, 
+    @Plaka VARCHAR(15), 
+    @SaseNo VARCHAR(17), 
+    @Kilometre INT, 
+    @Marka VARCHAR(50), 
+    @Model VARCHAR(50), 
+    @Yil INT, 
+    @YakitTipi VARCHAR(20), 
+    @VitesTipi VARCHAR(20)
+AS 
+BEGIN
+    SET NOCOUNT ON; 
+    INSERT INTO Rapor_Ana (
+        RandevuID, Plaka, SaseNo, Kilometre, 
+        Marka, Model, Yil, YakitTipi, VitesTipi
+    )
+    VALUES (
+        @RandevuID, @Plaka, @SaseNo, @Kilometre, 
+        @Marka, @Model, @Yil, @YakitTipi, @VitesTipi
+    );
+    
+    SELECT SCOPE_IDENTITY() AS RaporID;
+END;
+GO
+
+CREATE PROCEDURE sp_RaporKaportaKaydet
+    @RaporID INT, 
+    @Tavan VARCHAR(20), @OnTampon VARCHAR(20), @ArkaTampon VARCHAR(20), @Kaput VARCHAR(20), @Bagaj VARCHAR(20), 
+    @SolOnCamurluk VARCHAR(20), @SagOnCamurluk VARCHAR(20), @SolArkaCamurluk VARCHAR(20), @SagArkaCamurluk VARCHAR(20), 
+    @SolOnKapi VARCHAR(20), @SagOnKapi VARCHAR(20), @SolArkaKapi VARCHAR(20), @SagArkaKapi VARCHAR(20), 
+    @SolMarspiyel VARCHAR(20), @SagMarspiyel VARCHAR(20), @SolOnDirek VARCHAR(20), @SagOnDirek VARCHAR(20), 
+    @SolOrtaDirek VARCHAR(20), @SagOrtaDirek VARCHAR(20), @SolArkaDirek VARCHAR(20), @SagArkaDirek VARCHAR(20), 
+    @SolOnSase VARCHAR(20), @SagOnSase VARCHAR(20), @SolArkaSase VARCHAR(20), @SagArkaSase VARCHAR(20), 
+    @SolPodye VARCHAR(20), @SagPodye VARCHAR(20), @BagajHavuzu VARCHAR(20), @Aciklama VARCHAR(500)
+AS 
+BEGIN
+    INSERT INTO Rapor_Kaporta (
+        RaporID, Tavan, OnTampon, ArkaTampon, Kaput, Bagaj, 
+        SolOnCamurluk, SagOnCamurluk, SolArkaCamurluk, SagArkaCamurluk, 
+        SolOnKapi, SagOnKapi, SolArkaKapi, SagArkaKapi, 
+        SolMarspiyel, SagMarspiyel, SolOnDirek, SagOnDirek, 
+        SolOrtaDirek, SagOrtaDirek, SolArkaDirek, SagArkaDirek, 
+        SolOnSase, SagOnSase, SolArkaSase, SagArkaSase, 
+        SolPodye, SagPodye, BagajHavuzu, Aciklama
+    )
+    VALUES (
+        @RaporID, @Tavan, @OnTampon, @ArkaTampon, @Kaput, @Bagaj, 
+        @SolOnCamurluk, @SagOnCamurluk, @SolArkaCamurluk, @SagArkaCamurluk, 
+        @SolOnKapi, @SagOnKapi, @SolArkaKapi, @SagArkaKapi, 
+        @SolMarspiyel, @SagMarspiyel, @SolOnDirek, @SagOnDirek, 
+        @SolOrtaDirek, @SagOrtaDirek, @SolArkaDirek, @SagArkaDirek, 
+        @SolOnSase, @SagOnSase, @SolArkaSase, @SagArkaSase, 
+        @SolPodye, @SagPodye, @BagajHavuzu, @Aciklama
+    );
+END;
+GO
+
+CREATE PROCEDURE sp_RaporMotorKaydet
+    @RaporID INT, 
+    @MotorSesi VARCHAR(20), 
+    @UflemeVeDuman VARCHAR(20), 
+    @YagVeSiviSeviyeleri VARCHAR(30), 
+    @MotorYagKacaklari VARCHAR(20), 
+    @TurboVeYakıtSistemi VARCHAR(30), 
+    @SogutmaVeKlima VARCHAR(30), 
+    @KayisVeKasnaklar VARCHAR(30), 
+    @SanzimanVeAktarma VARCHAR(30), 
+    @Aciklama VARCHAR(500)
+AS 
+BEGIN
+    INSERT INTO Rapor_Motor (
+        RaporID, MotorSesi, UflemeVeDuman, YagVeSiviSeviyeleri, 
+        MotorYagKacaklari, TurboVeYakıtSistemi, SogutmaVeKlima, 
+        KayisVeKasnaklar, SanzimanVeAktarma, Aciklama
+    )
+    VALUES (
+        @RaporID, @MotorSesi, @UflemeVeDuman, @YagVeSiviSeviyeleri, 
+        @MotorYagKacaklari, @TurboVeYakıtSistemi, @SogutmaVeKlima, 
+        @KayisVeKasnaklar, @SanzimanVeAktarma, @Aciklama
+    );
+END;
+GO
+
+CREATE PROCEDURE sp_RaporMekanikKaydet
+    @RaporID INT, 
+    @SolAks VARCHAR(20), @SagAks VARCHAR(20), @DireksiyonKutusu VARCHAR(20), 
+    @RotBaslari VARCHAR(20), @OnBalatalar VARCHAR(20), @ArkaBalatalar VARCHAR(20), 
+    @OnDiskler VARCHAR(20), @ArkaDiskler VARCHAR(20), @SolOnSuspansiyon VARCHAR(20), 
+    @SagOnSuspansiyon VARCHAR(20), @SolArkaSuspansiyon VARCHAR(20), 
+    @SagArkaSuspansiyon VARCHAR(20), @Aciklama VARCHAR(500)
+AS 
+BEGIN
+    INSERT INTO Rapor_Mekanik (
+        RaporID, SolAks, SagAks, DireksiyonKutusu, 
+        RotBaslari, OnBalatalar, ArkaBalatalar, 
+        OnDiskler, ArkaDiskler, SolOnSuspansiyon, 
+        SagOnSuspansiyon, SolArkaSuspansiyon, 
+        SagArkaSuspansiyon, Aciklama
+    )
+    VALUES (
+        @RaporID, @SolAks, @SagAks, @DireksiyonKutusu, 
+        @RotBaslari, @OnBalatalar, @ArkaBalatalar, 
+        @OnDiskler, @ArkaDiskler, @SolOnSuspansiyon, 
+        @SagOnSuspansiyon, @SolArkaSuspansiyon, 
+        @SagArkaSuspansiyon, @Aciklama
+    );
+END;
+GO
+
+CREATE PROCEDURE sp_RaporObdKaydet
+    @RaporID INT, 
+    @GostergeKilometre INT, @BeyinKilometre INT, @KmOrijinalligi VARCHAR(30), 
+    @TramerDurumu VARCHAR(20), @TramerTutari DECIMAL(10,2), @MotorBeyni_ECU VARCHAR(20), 
+    @SanzimanBeyni_TCM VARCHAR(20), @ABS_ESP_Sistemi VARCHAR(20), @Airbag_Sistemi VARCHAR(30), 
+    @ElektronikAksamlar VARCHAR(20), @Aciklama VARCHAR(500)
+AS 
+BEGIN
+    INSERT INTO Rapor_OBD (
+        RaporID, GostergeKilometre, BeyinKilometre, KmOrijinalligi, 
+        TramerDurumu, TramerTutari, MotorBeyni_ECU, 
+        SanzimanBeyni_TCM, ABS_ESP_Sistemi, Airbag_Sistemi, 
+        ElektronikAksamlar, Aciklama
+    )
+    VALUES (
+        @RaporID, @GostergeKilometre, @BeyinKilometre, @KmOrijinalligi, 
+        @TramerDurumu, @TramerTutari, @MotorBeyni_ECU, 
+        @SanzimanBeyni_TCM, @ABS_ESP_Sistemi, @Airbag_Sistemi, 
+        @ElektronikAksamlar, @Aciklama
+    );
+END;
+GO
+
+CREATE PROCEDURE sp_RaporAirbagKaydet
+    @RaporID INT, 
+    @SurucuAirbag VARCHAR(30), @YolcuAirbag VARCHAR(30), @SurucuDizAirbag VARCHAR(30), 
+    @YolcuDizAirbag VARCHAR(30), @SolPerdeAirbag VARCHAR(30), @SagPerdeAirbag VARCHAR(30), 
+    @SurucuKoltukAirbag VARCHAR(30), @YolcuKoltukAirbag VARCHAR(30), @EmniyetKemerleri VARCHAR(30), 
+    @Aciklama VARCHAR(500)
+AS 
+BEGIN
+    INSERT INTO Rapor_Airbag (
+        RaporID, SurucuAirbag, YolcuAirbag, SurucuDizAirbag, 
+        YolcuDizAirbag, SolPerdeAirbag, SagPerdeAirbag, 
+        SurucuKoltukAirbag, YolcuKoltukAirbag, EmniyetKemerleri, 
+        Aciklama
+    )
+    VALUES (
+        @RaporID, @SurucuAirbag, @YolcuAirbag, @SurucuDizAirbag, 
+        @YolcuDizAirbag, @SolPerdeAirbag, @SagPerdeAirbag, 
+        @SurucuKoltukAirbag, @YolcuKoltukAirbag, @EmniyetKemerleri, 
+        @Aciklama
+    );
+END;
+GO
+
+CREATE PROCEDURE sp_SirketIstatistikGetir
+    @SirketID INT
+AS 
+BEGIN
+    SET NOCOUNT ON;
+    
+    DECLARE @BugunRandevu INT = (
+        SELECT COUNT(*) FROM Randevu 
+        WHERE SirketID = @SirketID AND RandevuTarihi = CAST(GETDATE() AS DATE) AND Durum != 'İptal Edildi'
+    );
+    
+    DECLARE @YarinRandevu INT = (
+        SELECT COUNT(*) FROM Randevu 
+        WHERE SirketID = @SirketID AND RandevuTarihi = CAST(GETDATE() + 1 AS DATE) AND Durum != 'İptal Edildi'
+    );
+    
+    DECLARE @GunlukKazanc DECIMAL(10,2) = (
+        SELECT ISNULL(SUM(AnlasilanFiyat), 0) FROM Randevu 
+        WHERE SirketID = @SirketID AND RandevuTarihi = CAST(GETDATE() AS DATE) AND Durum = 'Tamamlandı'
+    );
+    
+    DECLARE @EnCokSatanPaket VARCHAR(100) = (
+        SELECT TOP 1 P.PaketAdi FROM Randevu R 
+        INNER JOIN Paket P ON R.PaketID = P.PaketID 
+        WHERE R.SirketID = @SirketID 
+        GROUP BY P.PaketAdi 
+        ORDER BY COUNT(R.RandevuID) DESC
+    );
+    
+    IF @EnCokSatanPaket IS NULL SET @EnCokSatanPaket = 'Henüz Satış Yok';
+    
+    SELECT 
+        @BugunRandevu AS BugunRandevu, 
+        @YarinRandevu AS YarinRandevu, 
+        @GunlukKazanc AS GunlukKazanc, 
+        @EnCokSatanPaket AS EnCokSatanPaket;
+END;
+GO
+
+
+--TRİGER LAR
+
+CREATE TRIGGER trg_RandevuTamamla
+ON Rapor_Ana
+AFTER INSERT
+AS 
+BEGIN
+    UPDATE Randevu 
+    SET Durum = 'Tamamlandı' 
+    FROM Randevu R 
+    INNER JOIN inserted i ON R.RandevuID = i.RandevuID;
+END;
+GO
+
+CREATE TRIGGER trg_RandevuCakismaEngelle
+ON Randevu
+AFTER INSERT, UPDATE
+AS 
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM Randevu R 
+        INNER JOIN inserted i ON R.SirketID = i.SirketID AND R.RandevuTarihi = i.RandevuTarihi AND R.RandevuSaati = i.RandevuSaati
+        WHERE R.RandevuID != i.RandevuID AND R.Durum IN ('Bekliyor', 'Tamamlandı')
+    )
+    BEGIN
+        RAISERROR ('Çakışma Hatası: Seçilen şirketin bu tarih ve saatinde zaten başka bir randevusu bulunmaktadır!', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+END;
+GO
+
+--İZİNLER
+
+GRANT EXECUTE ON sp_MusteriKayit TO otocheck_user;
+GRANT EXECUTE ON sp_SirketKayit TO otocheck_user;
+GRANT EXECUTE ON sp_PaketEkle TO otocheck_user;
+GRANT EXECUTE ON sp_PaketGuncelle TO otocheck_user;
+GRANT EXECUTE ON sp_PaketSil TO otocheck_user;
+GRANT EXECUTE ON sp_EkspertizFiltrele TO otocheck_user;
+GRANT EXECUTE ON sp_RandevuOlustur TO otocheck_user;
+GRANT EXECUTE ON sp_RaporAnaKaydet TO otocheck_user;
+GRANT EXECUTE ON sp_RaporKaportaKaydet TO otocheck_user;
+GRANT EXECUTE ON sp_RaporMotorKaydet TO otocheck_user;
+GRANT EXECUTE ON sp_RaporMekanikKaydet TO otocheck_user;
+GRANT EXECUTE ON sp_RaporObdKaydet TO otocheck_user;
+GRANT EXECUTE ON sp_RaporAirbagKaydet TO otocheck_user;
+GRANT EXECUTE ON sp_SirketIstatistikGetir TO otocheck_user;
+GRANT SELECT ON vw_RaporTumDetaylar TO otocheck_user;
+GRANT SELECT ON vw_RaporIcinVeriGetir TO otocheck_user;
+GO
+
+-- VERİ YÜKLEME --
+
+SET IDENTITY_INSERT Sehirler ON;
+INSERT INTO Sehirler (SehirID, SehirAdi) VALUES 
+(1, 'İstanbul'), (2, 'Kocaeli'), (3, 'Bursa');
+SET IDENTITY_INSERT Sehirler OFF;
+
+SET IDENTITY_INSERT Ilceler ON;
+INSERT INTO Ilceler (IlceID, SehirID, IlceAdi) VALUES 
+(1, 1, 'Kadıköy'), (2, 1, 'Üsküdar'), (3, 1, 'Ümraniye'),
+(4, 2, 'Gebze'), (5, 2, 'İzmit'),
+(6, 3, 'Nilüfer');
+SET IDENTITY_INSERT Ilceler OFF;
+
+
+SET IDENTITY_INSERT Musteri ON;
+INSERT INTO Musteri (MusteriID, AdSoyad, Telefon, Email, Sifre) VALUES 
+(1, 'User 1', '05550001100', 'user1@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(2, 'User 2', '05550001101', 'user2@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(3, 'User 3', '05550001102', 'user3@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(4, 'User 4', '05550001103', 'user4@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(5, 'User 5', '05550001104', 'user5@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(6, 'User 6', '05550001105', 'user6@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(7, 'User 7', '05550001106', 'user7@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(8, 'User 8', '05550001107', 'user8@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(9, 'User 9', '05550001108', 'user9@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
+(10, 'User 10', '05550001109', 'user10@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92');
+SET IDENTITY_INSERT Musteri OFF;
+
+
+SET IDENTITY_INSERT Sirket ON;
+INSERT INTO Sirket (SirketID, SirketAdi, Sehir, Ilce, Adres, VKN, TSE_BelgeNo, Email, Sifre, Telefon, LogoPath) VALUES 
+(1, 'Otorapor Kadıköy Sahrayıcedit', 'İstanbul', 'Kadıköy', 'Sahrayı Cedit Mah. Atatürk Cad. No: 64', '11111111111', 'TSE-001', 'iletisim1@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009900', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AA=='),
+(2, 'Pilot Garage Kadıköy', 'İstanbul', 'Kadıköy', 'Merdivenköy Mah. Nur Sok. No: 1', '22222222222', 'TSE-002', 'iletisim2@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009901', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wAAAA=='),
+(3, 'Ümran Oto Ekspertiz Üsküdar', 'İstanbul', 'Üsküdar', 'Burhaniye Mah. Nurbaba Sok. No: 27', '33333333333', 'TSE-003', 'iletisim3@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009902', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AA=='),
+(4, 'Pilot Garage Ümraniye', 'İstanbul', 'Ümraniye', 'Şerifali Mah. Çetin Emeç Bulvarı No: 2', '44444444444', 'TSE-004', 'iletisim4@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009903', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAA=='),
+(5, 'Otorapor Ümraniye Kadosan', 'İstanbul', 'Ümraniye', 'Dudullu OSB Mah. Kadosan Oto Sanayi Sitesi 1. Sok.', '55555555555', 'TSE-005', 'iletisim5@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009904', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKX/AA=='),
+(6, 'EFT Oto Ekspertiz Gebze', 'Kocaeli', 'Gebze', 'Sultan Orhan Mah. Hasköy Sanayi Sitesi 1. Blok', '66666666666', 'TSE-006', 'iletisim6@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009905', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAAA=='),
+(7, 'Pilot Garage Gebze', 'Kocaeli', 'Gebze', 'Tatlıkuyu Mah. Güney Yanyol Cad. No: 94', '77777777777', 'TSE-007', 'iletisim7@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009906', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAIAAA=='),
+(8, 'Tarcanlar Oto Ekspertiz', 'Kocaeli', 'İzmit', 'Sanayi Mah. Çarşı Yapı AVM D Blok', '88888888888', 'TSE-008', 'iletisim8@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009907', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=='),
+(9, 'Otorapor Nilüfer Beşevler', 'Bursa', 'Nilüfer', 'Beşevler Mah. Küçük Sanayi Sitesi 65. Blok', '99999999999', 'TSE-009', 'iletisim9@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009908', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP8AAA=='),
+(10, 'Pilot Garage Bursa Nilüfer', 'Bursa', 'Nilüfer', 'Üçevler Mah. İzmir Yolu Cad. No: 235', '10101010101', 'TSE-010', 'iletisim10@oto.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '05550009909', 
+'Qk06AAAAAAAAADYAAAKAAAAAAQAAAAQAAAABABgAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AA==');
+SET IDENTITY_INSERT Sirket OFF;
+
+SET IDENTITY_INSERT Paket ON;
+INSERT INTO Paket (PaketID, SirketID, PaketAdi, Fiyat, Icerik_Motor, Icerik_Mekanik, Icerik_Kaporta, Icerik_Airbag, Icerik_OBD) VALUES 
+(1, 1, 'Otorapor Bronz Paket', 5500.00, 1, 0, 1, 0, 0),
+(2, 1, 'Otorapor Altın Paket', 9500.00, 1, 1, 1, 0, 1),
+(3, 1, 'Otorapor Platin Paket (Full)', 14500.00, 1, 1, 1, 1, 1),
+(4, 2, 'Pilot Garage Standart Test', 6000.00, 1, 1, 0, 0, 1),
+(5, 2, 'Pilot Garage VIP Full Paket', 12000.00, 1, 1, 1, 1, 1),
+(6, 3, 'Ümran Plus Paket', 8000.00, 1, 1, 1, 0, 1),
+(7, 4, 'Motor & Mekanik Uzman', 5500.00, 1, 1, 0, 0, 0),
+(8, 5, 'Otorapor Gümüş Paket', 7500.00, 1, 0, 1, 0, 1),
+(9, 6, 'EFT Detaylı Ekspertiz', 9000.00, 1, 1, 1, 1, 0),
+(10, 7, 'Sadece Boya & Kaporta Testi', 4500.00, 0, 0, 1, 0, 0),
+(11, 8, 'Tarcanlar Özel Full Ekspertiz', 18000.00, 1, 1, 1, 1, 1),
+(12, 9, 'Otorapor Altın Paket', 9500.00, 1, 1, 1, 0, 1),
+(13, 10, 'Sadece OBD Beyin ve Arıza', 3000.00, 0, 0, 0, 0, 1);
+SET IDENTITY_INSERT Paket OFF;
+
+SET IDENTITY_INSERT Araba ON;
+INSERT INTO Araba (ArabaID, MusteriID, Plaka, Marka, Model, Yil) VALUES 
+(1, 1, '34ABC01', 'Volkswagen', 'Golf', 2020), 
+(2, 1, '34ABC02', 'Renault', 'Clio', 2022),  
+(3, 2, '34ABC03', 'Ford', 'Focus', 2018),
+(4, 3, '34ABC04', 'Honda', 'Civic', 2021),
+(5, 4, '34ABC05', 'Toyota', 'Corolla', 2019),
+(6, 5, '34ABC06', 'Audi', 'A3', 2023),
+(7, 6, '34ABC07', 'BMW', '320i', 2017),
+(8, 7, '34ABC08', 'Mercedes', 'C200', 2020),
+(9, 8, '34ABC09', 'Fiat', 'Egea', 2021),
+(10, 9, '34ABC10', 'Skoda', 'Octavia', 2022);
+SET IDENTITY_INSERT Araba OFF;
+
+SET IDENTITY_INSERT Randevu ON;
+INSERT INTO Randevu (RandevuID, MusteriID, SirketID, ArabaID, PaketID, RandevuTarihi, RandevuSaati, AnlasilanFiyat, Durum) VALUES 
+(1, 1, 1, 1, 2, '2026-06-01', '10:00', 12500.00, 'Tamamlandı'), 
+(2, 2, 1, 3, 1, '2026-06-02', '14:00', 7500.00, 'Tamamlandı'),
+(3, 3, 2, 4, 5, '2026-06-03', '11:00', 9000.00, 'Tamamlandı'),
+(4, 4, 3, 5, 6, '2026-06-04', '15:00', 4000.00, 'Tamamlandı'),
+(5, 1, 1, 2, 1, '2026-06-10', '09:00', 7500.00, 'Bekliyor'), 
+(6, 5, 1, 6, 2, '2026-06-10', '13:00', 12500.00, 'Bekliyor'),
+(7, 6, 1, 7, 3, '2026-06-11', '10:00', 5000.00, 'Bekliyor'),
+(8, 7, 2, 8, 4, '2026-06-11', '14:00', 6000.00, 'Bekliyor'),
+(9, 8, 4, 9, 7, '2026-06-12', '11:00', 15000.00, 'Bekliyor'),
+(10, 9, 5, 10, 8, '2026-06-12', '15:00', 3000.00, 'Bekliyor');
+SET IDENTITY_INSERT Randevu OFF;
+
+SET IDENTITY_INSERT Rapor_Ana ON;
+INSERT INTO Rapor_Ana (RaporID, RandevuID, Plaka, SaseNo, Kilometre, Marka, Model, Yil, YakitTipi, VitesTipi, RaporTarihi) VALUES 
+(1, 1, '34ABC01', 'SASENO12345678901', 85000, 'Volkswagen', 'Golf', 2020, 'Benzin', 'Otomatik', '2026-06-01 11:30:00'),
+(2, 2, '34ABC03', 'SASENO12345678902', 120000, 'Ford', 'Focus', 2018, 'Dizel', 'Manuel', '2026-06-02 15:30:00'),
+(3, 3, '34ABC04', 'SASENO12345678903', 45000, 'Honda', 'Civic', 2021, 'LPG', 'Otomatik', '2026-06-03 12:30:00'),
+(4, 4, '34ABC05', 'SASENO12345678904', 65000, 'Toyota', 'Corolla', 2019, 'Hibrit', 'Otomatik', '2026-06-04 16:30:00');
+SET IDENTITY_INSERT Rapor_Ana OFF;
+
+INSERT INTO Rapor_Kaporta (RaporID, Tavan, OnTampon, ArkaTampon, Kaput, Bagaj, SolOnCamurluk, SagOnCamurluk, SolArkaCamurluk, SagArkaCamurluk, SolOnKapi, SagOnKapi, SolArkaKapi, SagArkaKapi, SolMarspiyel, SagMarspiyel, SolOnDirek, SagOnDirek, SolOrtaDirek, SagOrtaDirek, SolArkaDirek, SagArkaDirek, SolOnSase, SagOnSase, SolArkaSase, SagArkaSase, SolPodye, SagPodye, BagajHavuzu, Aciklama) VALUES 
+(1, 'Orijinal', 'Plastik', 'Plastik', 'Değişen', 'Orijinal', 'Boyalı', 'Orijinal', 'Lokal Boyalı', 'Orijinal', 'Boyalı', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Kaput ufak kazadan dolayı serviste değişmiş, sol yanda sürtme kaynaklı lokal boya var.'),
+(2, 'Boyalı', 'Plastik', 'Değişen', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Boyalı', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'İşlemli', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Araç komple temizlik boyalı. Şasede ufak bir çektirme yapılmış.'),
+(3, 'Orijinal', 'Plastik', 'Plastik', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Hatasız boyasız kapalı garaj aracı.'),
+(4, 'Orijinal', 'Değişen', 'Plastik', 'Lokal Boyalı', 'Orijinal', 'Orijinal', 'Değişen', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Sadece ön ufak tıklama, çamurluk değişmiş.');
+
+INSERT INTO Rapor_Motor (RaporID, MotorSesi, UflemeVeDuman, YagVeSiviSeviyeleri, MotorYagKacaklari, TurboVeYakıtSistemi, SogutmaVeKlima, KayisVeKasnaklar, SanzimanVeAktarma, Aciklama) VALUES 
+(1, 'Normal', 'Yok', 'Seviyeler Tam', 'Terleme Var', 'Sorunsuz', 'Sorunsuz', 'İyi Durumda', 'Sorunsuz', 'Motor durumu yaşına göre çok sağlıklı.'),
+(2, 'Sesli/İticili', 'Hafif Üfleme', 'Eksik/Değişim Gerekli', 'Kaçak Var', 'Ses/Terleme Var', 'Klima Soğutmuyor', 'Ses Yapıyor', 'Vuruntulu/Sarsıntılı', 'Ağır bakımlarının yapılması elzemdir.'),
+(3, 'Normal', 'Yok', 'Seviyeler Tam', 'Yok', 'Sorunsuz', 'Sorunsuz', 'İyi Durumda', 'Sorunsuz', 'Sorunsuz motor.'),
+(4, 'Normal', 'Yok', 'Seviyeler Tam', 'Yok', 'Sorunsuz', 'Sorunsuz', 'İyi Durumda', 'Sorunsuz', 'Batarya ve içten yanmalı motor uyumlu.');
+
+INSERT INTO Rapor_Mekanik (RaporID, SolAks, SagAks, DireksiyonKutusu, RotBaslari, OnBalatalar, ArkaBalatalar, OnDiskler, ArkaDiskler, SolOnSuspansiyon, SagOnSuspansiyon, SolArkaSuspansiyon, SagArkaSuspansiyon, Aciklama) VALUES 
+(1, 'İyi', 'İyi', 'İyi', 'Çok İyi', 'Orta', 'Orta', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'Fren balataları yakında değişebilir.'),
+(2, 'Orta', 'Kötü/Değişmeli', 'Orta', 'Kötü/Değişmeli', 'Kötü/Değişmeli', 'Kötü/Değişmeli', 'Orta', 'Orta', 'Kötü/Değişmeli', 'Kötü/Değişmeli', 'Orta', 'Orta', 'Ön takım revizyon istiyor.'),
+(3, 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Çok İyi', 'Mükemmel mekanik.'),
+(4, 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'İyi', 'Standart durumda.');
+
+INSERT INTO Rapor_OBD (RaporID, GostergeKilometre, BeyinKilometre, KmOrijinalligi, TramerDurumu, TramerTutari, MotorBeyni_ECU, SanzimanBeyni_TCM, ABS_ESP_Sistemi, Airbag_Sistemi, ElektronikAksamlar, Aciklama) VALUES 
+(1, 85000, 85010, 'Orijinal', 'Çarpma/Maddi Hasar', 12500.00, 'Geçmiş Hata Var', 'Sorunsuz', 'Sorunsuz', 'Sorunsuz', 'Sorunsuz', 'Tramer kaydı ön kaput değişiminden.'),
+(2, 120000, 195000, 'Düşürülmüş/Müdahaleli', 'Ağır Hasar/Pert', 45000.00, 'Aktif Hata Var', 'Aktif Hata Var', 'Geçmiş Hata Var', 'Direnç Atılmış/İşlemli', 'Sorunlu', 'Araç ağır hasarlı ve kilometresi ile oynanmış!'),
+(3, 45000, 45000, 'Orijinal', 'Hasar Kaydı Yok', 0.00, 'Sorunsuz', 'Sorunsuz', 'Sorunsuz', 'Sorunsuz', 'Sorunsuz', 'Tertemiz OBD verileri.'),
+(4, 65000, 65005, 'Orijinal', 'Çarpma/Maddi Hasar', 4000.00, 'Sorunsuz', 'Sorunsuz', 'Sorunsuz', 'Sorunsuz', 'Sorunsuz', 'Sadece tampon kaynaklı tramer.');
+
+INSERT INTO Rapor_Airbag (RaporID, SurucuAirbag, YolcuAirbag, SurucuDizAirbag, YolcuDizAirbag, SolPerdeAirbag, SagPerdeAirbag, SurucuKoltukAirbag, YolcuKoltukAirbag, EmniyetKemerleri, Aciklama) VALUES 
+(1, 'Orijinal', 'Orijinal', 'Orijinal', 'Donanımda Yok', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Kaput değişmesine rağmen airbagler açmamış, sağlam.'),
+(2, 'Patlak', 'Dirençli', 'Patlak', 'Donanımda Yok', 'Dirençli', 'Dirençli', 'Patlak', 'Patlak', 'Onarımlı/Dirençli', 'Araç güvenlik riski teşkil ediyor, airbagler tamirsiz.'),
+(3, 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Eksiksiz.'),
+(4, 'Orijinal', 'Orijinal', 'Orijinal', 'Donanımda Yok', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Orijinal', 'Sorun yok.');
+GO
