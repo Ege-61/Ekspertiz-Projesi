@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/giris_Fragment">
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.otocheck.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+    <fragment
+        android:id="@+id/giris_Fragment"
+        android:name="com.example.otocheck.Fragments.Giris_Fragment"
+        android:label="Giris_Fragment" >
+        <action
+            android:id="@+id/action_giris_Fragment_to_kayit_Fragment"
+            app:destination="@id/kayit_Fragment" />
+        <action
+            android:id="@+id/action_giris_Fragment_to_anaSayfaFragment"
+            app:destination="@id/anaSayfaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/kayit_Fragment"
+        android:name="com.example.otocheck.Fragments.Kayit_Fragment"
+        android:label="Kayit_Fragment" >
+        <action
+            android:id="@+id/action_kayit_Fragment_to_giris_Fragment"
+            app:destination="@id/giris_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/anaSayfaFragment"
+        android:name="com.example.otocheck.Fragments.AnaSayfaFragment"
+        android:label="AnaSayfaFragment" >
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_giris_Fragment"
+            app:destination="@id/giris_Fragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_randevuAlma_Fragment"
+            app:destination="@id/randevuAlma_Fragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_tumRandevular_Fragment"
+            app:destination="@id/tumRandevular_Fragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_paketDuzenle_Fragment"
+            app:destination="@id/paketDuzenle_Fragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_raporOlusturAna_Fragment"
+            app:destination="@id/raporOlusturAna_Fragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_gecmisRaporlar_Fragment"
+            app:destination="@id/gecmisRaporlar_Fragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_aramaSonuclari_Fragment"
+            app:destination="@id/aramaSonuclari_Fragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_sirketIstatistik_Fragment"
+            app:destination="@id/sirketIstatistik_Fragment" />
+        <action
+            android:id="@+id/action_anaSayfaFragment_to_ayarlar_Fragment"
+            app:destination="@id/ayarlar_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/randevuAlma_Fragment"
+        android:name="com.example.otocheck.Fragments.RandevuAlma_Fragment"
+        android:label="RandevuAlma_Fragment" >
+        <action
+            android:id="@+id/action_randevuAlma_Fragment_to_aracBilgileri_Fragment"
+            app:destination="@id/aracBilgileri_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aracBilgileri_Fragment"
+        android:name="com.example.otocheck.Fragments.AracBilgileri_Fragment"
+        android:label="AracBilgileri_Fragment" >
+        <action
+            android:id="@+id/action_aracBilgileri_Fragment_to_anaSayfaFragment"
+            app:destination="@id/anaSayfaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tumRandevular_Fragment"
+        android:name="com.example.otocheck.Fragments.TumRandevular_Fragment"
+        android:label="TumRandevular_Fragment" >
+        <action
+            android:id="@+id/action_tumRandevular_Fragment_to_raporOlusturAna_Fragment"
+            app:destination="@id/raporOlusturAna_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paketDuzenle_Fragment"
+        android:name="com.example.otocheck.Fragments.PaketDuzenle_Fragment"
+        android:label="PaketDuzenle_Fragment" />
+    <fragment
+        android:id="@+id/raporOlusturAna_Fragment"
+        android:name="com.example.otocheck.Fragments.RaporOlusturAna_Fragment"
+        android:label="RaporOlusturAna_Fragment" >
+        <action
+            android:id="@+id/action_raporOlusturAna_Fragment_to_raporOlusturGenel_Fragment"
+            app:destination="@id/raporOlusturGenel_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/raporOlusturGenel_Fragment"
+        android:name="com.example.otocheck.Fragments.RaporOlusturGenel_Fragment"
+        android:label="RaporOlusturGenel_Fragment" />
+    <fragment
+        android:id="@+id/gecmisRaporlar_Fragment"
+        android:name="com.example.otocheck.Fragments.GecmisRaporlar_Fragment"
+        android:label="GecmisRaporlar_Fragment" >
+        <action
+            android:id="@+id/action_gecmisRaporlar_Fragment_to_raporDetay_Fragment"
+            app:destination="@id/raporDetay_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aramaSonuclari_Fragment"
+        android:name="com.example.otocheck.Fragments.AramaSonuclari_Fragment"
+        android:label="AramaSonuclari_Fragment" >
+        <action
+            android:id="@+id/action_aramaSonuclari_Fragment_to_raporDetay_Fragment"
+            app:destination="@id/raporDetay_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/raporDetay_Fragment"
+        android:name="com.example.otocheck.Fragments.RaporDetay_Fragment"
+        android:label="RaporDetay_Fragment" />
+    <dialog
+        android:id="@+id/sirketIstatistik_Fragment"
+        android:name="com.example.otocheck.Fragments.SirketIstatistik_Fragment"
+        android:label="SirketIstatistik_Fragment" />
+    <fragment
+        android:id="@+id/ayarlar_Fragment"
+        android:name="com.example.otocheck.Fragments.Ayarlar_Fragment"
+        android:label="Ayarlar_Fragment" >
+        <action
+            android:id="@+id/action_ayarlar_Fragment_to_giris_Fragment"
+            app:destination="@id/giris_Fragment" />
+    </fragment>
+</navigation>

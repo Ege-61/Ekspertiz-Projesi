@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/arka_plan">
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/logoCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="230dp"
+            android:layout_height="180dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/otocheck_logo_yakin" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleGirisTipi"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        app:checkedButton="@id/btnBireysel"
+        app:selectionRequired="true"
+        app:singleSelection="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoCard">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBireysel"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            android:text="Bireysel"
+            android:textColor="@drawable/secili_yazi"
+            app:backgroundTint="@drawable/secili_arkaplan"
+            app:cornerRadius="25dp"
+            app:strokeColor="@color/ana_yesil"
+            app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKurumsal"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            android:text="Kurumsal"
+            android:textColor="@drawable/secili_yazi"
+            app:backgroundTint="@drawable/secili_arkaplan"
+            app:cornerRadius="25dp"
+            app:strokeColor="@color/ana_yesil"
+            app:strokeWidth="1dp" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="GİRİŞ YAP"
+        android:textColor="@color/ana_yesil"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleGirisTipi" />
+
+    <EditText
+        android:id="@+id/EmailEditText"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/bg_modern_kutu"
+        android:hint="E-posta"
+        android:inputType="textEmailAddress"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/metin_rengi"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/PasswordEditText"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_modern_kutu"
+        android:hint="Şifre"
+        android:inputType="textPassword"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/metin_rengi"
+        android:textColorHint="#808080"
+        app:layout_constraintEnd_toEndOf="@+id/EmailEditText"
+        app:layout_constraintStart_toStartOf="@+id/EmailEditText"
+        app:layout_constraintTop_toBottomOf="@+id/EmailEditText" />
+
+    <Button
+        android:id="@+id/girisbutton"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/ana_yesil"
+        android:text="GİRİŞ YAP"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:cornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="@+id/PasswordEditText"
+        app:layout_constraintStart_toStartOf="@+id/PasswordEditText"
+        app:layout_constraintTop_toBottomOf="@+id/PasswordEditText" />
+
+    <TextView
+        android:id="@+id/KayitOltxtButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="8dp"
+        android:text="Hesabın yok mu? Kayıt Ol"
+        android:textColor="#2196F3"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/girisbutton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

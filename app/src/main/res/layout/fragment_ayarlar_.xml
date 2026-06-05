@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="?android:attr/colorBackground">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ayarlar"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface"
+        android:layout_marginBottom="20dp" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="?attr/colorSurface">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hesap Bilgileri"
+                android:textColor="@color/ana_yesil"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginBottom="10dp"/>
+
+
+            <TextView
+                android:id="@+id/tvAyarlarIsim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yükleniyor..."
+                android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_marginBottom="8dp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@android:drawable/ic_menu_call"
+                    app:tint="?attr/colorOnSurfaceVariant"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvAyarlarTelefon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="05XX XXX XX XX"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@android:drawable/ic_dialog_email"
+                    app:tint="?attr/colorOnSurfaceVariant"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvAyarlarMail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ornek@otocheck.com"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hesap İşlemleri"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:layout_marginBottom="10dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBilgileriGuncelle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Kişisel Bilgileri Güncelle"
+        android:textAlignment="viewStart"
+        app:icon="@android:drawable/ic_menu_edit"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_marginBottom="10dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSifreDegistir"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Şifremi Değiştir"
+        android:textAlignment="viewStart"
+        app:icon="@android:drawable/ic_lock_idle_lock"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_marginBottom="25dp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Uygulama"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tema Tercihi"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:layout_marginBottom="10dp" />
+
+    <RadioGroup
+        android:id="@+id/rgTemaSecimi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
+
+        <RadioButton
+            android:id="@+id/rbSistemTemasi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sistem Temasını Kullan"
+            />
+
+        <RadioButton
+            android:id="@+id/rbAcikMod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Her Zaman Açık Mod"/>
+
+        <RadioButton
+            android:id="@+id/rbKoyuMod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Her Zaman Koyu Mod"/>
+    </RadioGroup>
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAyarlarCikis"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Güvenli Çıkış Yap"
+        android:textColor="#FFFFFF"
+        app:icon="@android:drawable/ic_lock_power_off"
+        app:iconTint="#FFFFFF"
+        app:backgroundTint="#D32F2F"
+        app:cornerRadius="12dp" />
+
+</LinearLayout>

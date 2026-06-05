@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="?attr/colorSurface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutVitrin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="16dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgSirketLogo"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="centerInside"
+                app:cornerSize="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@android:drawable/ic_menu_camera"/>
+            <TextView
+            android:id="@+id/tvSirketAdi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="OtoGüven Ekspertiz"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tvPaketFiyati"
+            app:layout_constraintStart_toEndOf="@+id/imgSirketLogo"
+            app:layout_constraintTop_toTopOf="@+id/imgSirketLogo" />
+
+            <TextView
+                android:id="@+id/tvPaketAdi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:text="Full Paket"
+                android:textColor="#808080"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/tvPaketFiyati"
+                app:layout_constraintStart_toEndOf="@+id/imgSirketLogo"
+                app:layout_constraintTop_toBottomOf="@+id/tvSirketAdi" />
+
+            <TextView
+                android:id="@+id/tvKonum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:text="İstanbul / Kadıköy"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="12sp"
+                app:drawableStartCompat="@android:drawable/ic_menu_mylocation"
+                app:drawableTint="?attr/colorOnSurfaceVariant"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgSirketLogo" />
+
+            <TextView
+                android:id="@+id/tvPaketFiyati"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.500 TL"
+                android:textColor="@color/ana_yesil"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tvPaketAdi"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvSirketAdi" />
+
+            <ImageView
+                android:id="@+id/imgGecisOku"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="2dp"
+                android:src="@android:drawable/ic_menu_more"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="#808080" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutGizliDetay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="gone"> <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Paket İçeriği:"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="?attr/colorOnSurface"/>
+
+            <TextView
+                android:id="@+id/tvPaketIcerikOzet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Motor Mekanik, Kaporta Boya, OBD Beyin Testi"
+                android:textColor="#808080"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Randevu Saati Seçin:"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="?attr/colorOnSurface"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSaatler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+            <Button
+                android:id="@+id/btnRandevuOnay"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:text="Saat Seç ve İlerle"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:backgroundTint="@color/ana_yesil"
+                app:cornerRadius="10dp"
+                android:enabled="false"/> </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

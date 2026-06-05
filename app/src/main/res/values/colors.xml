@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="arka_plan">#FFFFFF</color>
+    <color name="metin_rengi">#212121</color>
+    <color name="ana_yesil">#154E25</color>
+    <color name="ikinci_yesil">#72BF4E</color>
+    <color name="kutu_arka_plan">#F5F5F5</color>
+    <color name="toggle_yazi_secili">#FFFFFF</color>
+</resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="3dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/txtGecmisArac"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Volkswagen Golf"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtGecmisPlaka"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="34ABC123"
+                android:textColor="@color/ana_yesil"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:background="@drawable/bg_modern_kutu"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtGecmisSirket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OtoGüven Ekspertiz Merkezi"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            android:layout_marginTop="5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginVertical="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/txtGecmisTarihPaket"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="12.06.2026 | Full Paket"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnRaporuIncele"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="Raporu İncele"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/ana_yesil"
+                android:textColor="#FFFFFF"
+                app:cornerRadius="8dp"
+                android:paddingHorizontal="15dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

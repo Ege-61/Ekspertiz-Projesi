@@ -1,0 +1,1145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/ana_yesil"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tam Kapsamlı Ekspertiz Raporu"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAnaBilgiler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:text="Araç Kimlik Bilgileri"
+                        android:textColor="@color/ana_yesil"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/etRaporPlaka"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/bg_modern_kutu"
+                        android:enabled="false"
+                        android:hint="Plaka"
+                        android:paddingHorizontal="15dp" />
+
+                    <EditText
+                        android:id="@+id/etRaporSase"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/bg_modern_kutu"
+                        android:hint="Şase Numarası"
+                        android:paddingHorizontal="15dp" />
+
+                    <EditText
+                        android:id="@+id/etRaporKilometre"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_modern_kutu"
+                        android:hint="Güncel Kilometre"
+                        android:inputType="number"
+                        android:paddingHorizontal="15dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardKaporta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/headerKaporta"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Kaporta &amp; Boya Durumu"
+                            android:textColor="#EF5350"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/ivArrowKaporta"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="#EF5350" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contentKaporta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Tavan" />
+                        <Spinner android:id="@+id/spKprTavan"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ön Tampon" />
+                        <Spinner
+                            android:id="@+id/spKprOnTampon"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Arka Tampon" />
+                        <Spinner
+                            android:id="@+id/spKprArkaTampon"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Kaput" />
+                        <Spinner
+                            android:id="@+id/spKprKaput"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Bagaj" />
+                        <Spinner
+                            android:id="@+id/spKprBagaj"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Ön Çamurluk" />
+                        <Spinner
+                            android:id="@+id/spKprSolOnCamurluk"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Ön Çamurluk" />
+                        <Spinner
+                            android:id="@+id/spKprSagOnCamurluk"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Arka Çamurluk" />
+                        <Spinner
+                            android:id="@+id/spKprSolArkaCamurluk"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Arka Çamurluk" />
+                        <Spinner
+                            android:id="@+id/spKprSagArkaCamurluk"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Ön Kapı" />
+                        <Spinner
+                            android:id="@+id/spKprSolOnKapi"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Ön Kapı" />
+                        <Spinner
+                            android:id="@+id/spKprSagOnKapi"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Arka Kapı" />
+                        <Spinner
+                            android:id="@+id/spKprSolArkaKapi"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Arka Kapı" />
+                        <Spinner
+                            android:id="@+id/spKprSagArkaKapi"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Marşpiyel" />
+                        <Spinner
+                            android:id="@+id/spKprSolMarspiyel"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Marşpiyel" />
+                        <Spinner
+                            android:id="@+id/spKprSagMarspiyel"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Ön Direk"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSolOnDirek"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Ön Direk"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSagOnDirek"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Orta Direk"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSolOrtaDirek"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Orta Direk"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSagOrtaDirek"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Arka Direk"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSolArkaDirek"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Arka Direk"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSagArkaDirek"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Ön Şase"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSolOnSase"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Ön Şase"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSagOnSase"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Arka Şase"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSolArkaSase"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Arka Şase"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSagArkaSase"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Podye"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSolPodye"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Podye"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprSagPodye"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Bagaj Havuzu"
+                            android:textStyle="bold" />
+                        <Spinner
+                            android:id="@+id/spKprBagajHavuzu"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <EditText
+                            android:id="@+id/etKaportaNot"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_modern_kutu"
+                            android:hint="Kaporta Notları"
+                            android:paddingHorizontal="10dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardMotor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/headerMotor"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Motor &amp; Turbo Testi"
+                            android:textColor="#FF9800"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/ivArrowMotor"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="#FF9800" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contentMotor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Motor Sesi" />
+                        <Spinner
+                            android:id="@+id/spMtrSesi"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Üfleme ve Duman" />
+                        <Spinner
+                            android:id="@+id/spMtrUfleme"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Yağ ve Sıvı Seviyeleri" />
+                        <Spinner
+                            android:id="@+id/spMtrSivi"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Motor Yağ Kaçakları" />
+                        <Spinner
+                            android:id="@+id/spMtrKacak"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Turbo ve Yakıt Sistemi" />
+                        <Spinner
+                            android:id="@+id/spMtrTurbo"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Soğutma ve Klima" />
+                        <Spinner
+                            android:id="@+id/spMtrSogutma"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Kayış ve Kasnaklar" />
+                        <Spinner
+                            android:id="@+id/spMtrKayis"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Şanzıman ve Aktarma" />
+                        <Spinner
+                            android:id="@+id/spMtrSanziman"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <EditText
+                            android:id="@+id/etMotorNot"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/bg_modern_kutu"
+                            android:hint="Motor Notları"
+                            android:paddingHorizontal="10dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardMekanik"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/headerMekanik"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Mekanik &amp; Alt Takım"
+                            android:textColor="#2196F3"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/ivArrowMekanik"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="#2196F3" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contentMekanik"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Aks" />
+                        <Spinner
+                            android:id="@+id/spMekSolAks"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:text="Sağ Aks" />
+                        <Spinner
+                            android:id="@+id/spMekSagAks"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Direksiyon Kutusu" />
+                        <Spinner
+                            android:id="@+id/spMekDireksiyon"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Rot Başları" />
+                        <Spinner
+                            android:id="@+id/spMekRot"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ön Balatalar" />
+                        <Spinner
+                            android:id="@+id/spMekOnBalata"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Arka Balatalar" />
+                        <Spinner
+                            android:id="@+id/spMekArkaBalata"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ön Diskler" />
+                        <Spinner
+                            android:id="@+id/spMekOnDisk"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Arka Diskler" />
+                        <Spinner
+                            android:id="@+id/spMekArkaDisk"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Ön Süspansiyon" />
+                        <Spinner
+                            android:id="@+id/spMekSolOnSus"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Ön Süspansiyon" />
+                        <Spinner
+                            android:id="@+id/spMekSagOnSus"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Arka Süspansiyon" />
+                        <Spinner
+                            android:id="@+id/spMekSolArkSus"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Arka Süspansiyon" />
+                        <Spinner
+                            android:id="@+id/spMekSagArkSus"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <EditText
+                            android:id="@+id/etMekanikNot"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/bg_modern_kutu"
+                            android:hint="Mekanik Notları"
+                            android:paddingHorizontal="10dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardOBD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/headerOBD"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="OBD Beyin Testi"
+                            android:textColor="#9C27B0"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/ivArrowOBD"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="#9C27B0" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contentOBD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="gone">
+
+                        <EditText
+                            android:id="@+id/etObdGostergeKM"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu"
+                            android:hint="Gösterge Kilometresi"
+                            android:inputType="number"
+                            android:paddingHorizontal="15dp" />
+
+                        <EditText
+                            android:id="@+id/etObdBeyinKM"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu"
+                            android:hint="Beyinden Okunan Gerçek KM"
+                            android:inputType="number"
+                            android:paddingHorizontal="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="KM Orijinalliği" />
+                        <Spinner
+                            android:id="@+id/spObdKmOrj"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Tramer Durumu" />
+                        <Spinner
+                            android:id="@+id/spObdTramer"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <EditText
+                            android:id="@+id/etObdTramerTutari"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu"
+                            android:hint="Tramer Tutarı (TL)"
+                            android:inputType="numberDecimal"
+                            android:paddingHorizontal="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Motor Beyni (ECU)" />
+                        <Spinner
+                            android:id="@+id/spObdEcu"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Şanzıman Beyni (TCM)" />
+                        <Spinner
+                            android:id="@+id/spObdTcm"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ABS/ESP Sistemi" />
+                        <Spinner
+                            android:id="@+id/spObdAbs"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Airbag Sistemi" />
+                        <Spinner
+                            android:id="@+id/spObdAirbag"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Elektronik Aksamlar" />
+                        <Spinner
+                            android:id="@+id/spObdElektronik"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <EditText
+                            android:id="@+id/etObdNot"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/bg_modern_kutu"
+                            android:hint="OBD Notları"
+                            android:paddingHorizontal="10dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAirbag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/headerAirbag"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Airbag &amp; Kemer Kontrolü"
+                            android:textColor="#009688"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/ivArrowAirbag"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/arrow_down_float"
+                            app:tint="#009688" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contentAirbag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sürücü Airbag" />
+                        <Spinner
+                            android:id="@+id/spAbgSurucu"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Yolcu Airbag" />
+                        <Spinner
+                            android:id="@+id/spAbgYolcu"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sürücü Diz Airbag" />
+                        <Spinner
+                            android:id="@+id/spAbgSurucuDiz"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Yolcu Diz Airbag" />
+                        <Spinner
+                            android:id="@+id/spAbgYolcuDiz"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sol Perde Airbag" />
+                        <Spinner
+                            android:id="@+id/spAbgSolPerde"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sağ Perde Airbag" />
+                        <Spinner
+                            android:id="@+id/spAbgSagPerde"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sürücü Koltuk Airbag" />
+                        <Spinner
+                            android:id="@+id/spAbgSurucuKoltuk"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Yolcu Koltuk Airbag" />
+                        <Spinner
+                            android:id="@+id/spAbgYolcuKoltuk"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Emniyet Kemerleri" />
+                        <Spinner
+                            android:id="@+id/spAbgKemer"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/bg_modern_kutu" />
+
+                        <EditText
+                            android:id="@+id/etAirbagNot"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@drawable/bg_modern_kutu"
+                            android:hint="Airbag Notları"
+                            android:paddingHorizontal="10dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Button
+                android:id="@+id/btnTumRaporuKaydet"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/ana_yesil"
+                android:text="TÜM RAPORU SİSTEME KAYDET"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="15dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

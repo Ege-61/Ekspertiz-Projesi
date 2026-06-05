@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">OtoCheck</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="siralama_secenekleri">
+        <item>Fiyat (Artan)</item>
+        <item>Fiyat (Azalan)</item>
+    </string-array>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
